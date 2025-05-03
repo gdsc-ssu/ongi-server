@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,9 +35,25 @@ public class MedicationSchedule extends BaseTimeEntity {
 
     private LocalDate checkDate;
 
+    private LocalTime medicationTime;
+
+    private String reason;
+
+    private Integer remindAfterMinutes;
+
     public void reset() {
         this.isTaken = false;
         this.checkDate = LocalDate.now();
+    }
+
+    public void markAsTaken() {
+        this.isTaken = true;
+    }
+
+    public void markAsNotTaken(String reason, Integer remindAfterMinutes) {
+        this.isTaken = false;
+        this.reason = reason;
+        this.remindAfterMinutes = remindAfterMinutes;
     }
 
 }
