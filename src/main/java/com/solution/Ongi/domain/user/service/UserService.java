@@ -3,7 +3,6 @@ package com.solution.Ongi.domain.user.service;
 import com.solution.Ongi.domain.agreement.Agreement;
 import com.solution.Ongi.domain.smsverification.SmsVerification;
 import com.solution.Ongi.domain.smsverification.SmsVerificationRepository;
-import com.solution.Ongi.domain.user.dto.SignupRequest;
 import com.solution.Ongi.domain.user.User;
 import com.solution.Ongi.domain.user.dto.LoginRequest;
 import com.solution.Ongi.domain.user.dto.SignupRequest;
@@ -56,6 +55,7 @@ public class UserService {
             .seniorPhone(request.seniorPhone())
             .relation(request.relation())
             .alertMax(request.alertMax())
+            .maxMissedResponses(request.maxMissedResponses())
             .agreement(agreement)
             .build();
 
@@ -86,6 +86,11 @@ public class UserService {
     public User getUserByIdOrThrow(Long userId){
         return userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundException(userId));
+    }
+
+    public User getUserByLoginIdOrThrow(String userId){
+        return userRepository.findByLoginId(userId)
+            .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
     }
 
 }
