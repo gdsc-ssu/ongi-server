@@ -24,9 +24,9 @@ public class MedicationService {
     private final MedicationRepository medicationRepository;
     private final DateTimeFormatter timeFormatter=DateTimeFormatter.ofPattern("HH:mm");
 
-    //Meal 생성
-    public Medication createMedication(Long userId, CreateMedicationRequest createMedicationRequest){
-        User user=userService.getUserByIdOrThrow(userId);
+    //Medication 생성
+    public Medication createMedication(String userId, CreateMedicationRequest createMedicationRequest){
+        User user=userService.getUserByLoginIdOrThrow(userId);
 
         Medication medication=Medication.builder()
                 .medication_title(createMedicationRequest.getMedication_title())

@@ -1,6 +1,7 @@
 package com.solution.Ongi.domain.medication;
 
 import com.solution.Ongi.domain.user.User;
+import com.solution.Ongi.global.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Medication {
+public class Medication extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

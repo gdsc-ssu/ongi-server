@@ -1,15 +1,21 @@
 package com.solution.Ongi.domain.medication.controller;
 
 import com.solution.Ongi.domain.medication.Medication;
+import com.solution.Ongi.domain.medication.dto.CreateMedicationRequest;
 import com.solution.Ongi.domain.medication.dto.CreateMedicationResponse;
 import com.solution.Ongi.domain.medication.service.MedicationService;
-import com.solution.Ongi.domain.medication.dto.CreateMedicationRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/medications")
@@ -20,12 +26,12 @@ public class MedicationController {
 
     @PostMapping("/post/{userId}/medications")
     public ResponseEntity<CreateMedicationResponse> createMedication(
-            @PathVariable("userId") Long userId,
-            @RequestBody CreateMedicationRequest createMedicationRequest) {
+        Authentication authentication,
+        @RequestBody CreateMedicationRequest createMedicationRequest) {
 
-        Medication medication=medicationService.createMedication(userId,createMedicationRequest);
+        Medication medication=medicationService.createMedication(authentication.getName(),createMedicationRequest);
 
-        URI location= URI.create("/users/"+userId+"/medications/"+medication.getId());
+        URI location= URI.create("/users/"+authentication.getName()+"/medications/"+medication.getId());
 
         return ResponseEntity
                 .created(location)
