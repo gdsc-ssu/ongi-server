@@ -10,16 +10,16 @@ import com.solution.Ongi.domain.user.repository.UserRepository;
 import com.solution.Ongi.domain.user.service.UserService;
 import com.solution.Ongi.global.response.code.ErrorStatus;
 import com.solution.Ongi.global.response.exception.GeneralException;
-import jakarta.transaction.Transactional;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MedicationService {
 
     private final UserRepository userRepository;
@@ -27,7 +27,8 @@ public class MedicationService {
     private final MedicationRepository medicationRepository;
     private final DateTimeFormatter timeFormatter=DateTimeFormatter.ofPattern("HH:mm");
 
-    //Medication 생성
+    // Medication 생성
+    @Transactional
     public Medication createMedication(String userId, CreateMedicationRequest createMedicationRequest){
         User user=userService.getUserByLoginIdOrThrow(userId);
 
@@ -44,7 +45,7 @@ public class MedicationService {
         return medicationRepository.save(medication);
     }
 
-    //유저의 Medication 전체 조회
+    // 유저의 Medication 전체 조회
     public List<MedicationDTO> getAllMedication(String loginId){
         User user = userService.getUserByLoginIdOrThrow(loginId);
         List<Medication> medications = medicationRepository.findAllByUserId(user.getId());
@@ -55,6 +56,7 @@ public class MedicationService {
     }
 
     // Medication 삭제
+    @Transactional
     public void deleteMedication(String loginId, Long medication_id){
         User user = userService.getUserByLoginIdOrThrow(loginId);
         Medication medication=medicationRepository.findById(medication_id)
@@ -67,6 +69,8 @@ public class MedicationService {
         medicationRepository.delete(medication);
     }
 
+    // Medication 수정
+    @Transactional
     public void updateMedication(String loginId, Long medicationId, UpdateMedicationRequest request) {
         User user = userService.getUserByLoginIdOrThrow(loginId);
         Medication medication = medicationRepository.findById(medicationId)
@@ -83,5 +87,4 @@ public class MedicationService {
         medication.update(request.title(), convertedTimeList);
     }
 
-    // Medication 수정
 }

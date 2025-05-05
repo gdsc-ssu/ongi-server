@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,16 +46,49 @@ public class MedicationScheduleController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @GetMapping
-    @Operation(summary = "날짜 범위 내 복약 스케줄 조회")
-    public ResponseEntity<ApiResponse<List<MedicationScheduleResponse>>> getMedicationSchedules(
+    @GetMapping("/today")
+    @Operation(summary = "오늘 복약 스케줄 조회")
+    public ResponseEntity<ApiResponse<List<MedicationScheduleResponse>>> getMedicationSchedulesToday(
+        Authentication authentication) {
+        LocalDate today = LocalDate.now();
+        List<MedicationScheduleResponse> responses = scheduleService.getSchedulesByDate(
+            authentication.getName(), today);
+        return ResponseEntity.ok(ApiResponse.success(responses));
+    }
+
+    @GetMapping("/today/not-taken")
+    @Operation(summary = "오늘 복용하지 않은 복약 스케줄 조회")
+    public ResponseEntity<ApiResponse<List<MedicationScheduleResponse>>> getTodayNotTakenSchedules(
+        Authentication authentication
+    ) {
+        LocalDate today = LocalDate.now();
+        List<MedicationScheduleResponse> responses =
+            scheduleService.getNotTakenMedicationSchedules(authentication.getName(), today);
+        return ResponseEntity.ok(ApiResponse.success(responses));
+    }
+
+    @GetMapping("/by-date")
+    @Operation(summary = "특정 날짜 복약 스케줄 조회")
+    public ResponseEntity<ApiResponse<List<MedicationScheduleResponse>>> getMedicationSchedulesByDate(
         Authentication authentication,
         @Parameter(example = "2025-05-01")
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-        @Parameter(example = "2025-05-03")
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+        @RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate date
     ) {
-        List<MedicationScheduleResponse> schedules = scheduleService.getMedicationSchedules(
+        List<MedicationScheduleResponse> responses = scheduleService.getSchedulesByDate(
+            authentication.getName(), date);
+        return ResponseEntity.ok(ApiResponse.success(responses));
+    }
+
+    @GetMapping("by-range")
+    @Operation(summary = "날짜 범위 내 복약 스케줄 조회")
+    public ResponseEntity<ApiResponse<List<MedicationScheduleResponse>>> getMedicationSchedulesByRange(
+        Authentication authentication,
+        @Parameter(example = "2025-05-01")
+        @RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate startDate,
+        @Parameter(example = "2025-05-03")
+        @RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate endDate
+    ) {
+        List<MedicationScheduleResponse> schedules = scheduleService.getSchedulesByDateRange(
             authentication.getName(), startDate, endDate);
         return ResponseEntity.ok(ApiResponse.success(schedules));
     }

@@ -9,7 +9,7 @@ import com.solution.Ongi.domain.user.User;
 import com.solution.Ongi.domain.user.service.UserService;
 import com.solution.Ongi.global.response.code.ErrorStatus;
 import com.solution.Ongi.global.response.exception.GeneralException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MedicationScheduleService {
 
     private final MedicationScheduleRepository scheduleRepository;
@@ -46,7 +47,17 @@ public class MedicationScheduleService {
         );
     }
 
-    public List<MedicationScheduleResponse> getMedicationSchedules(String loginId, LocalDate startDate, LocalDate endDate) {
+    public List<MedicationScheduleResponse> getSchedulesByDate(String loginId, LocalDate date) {
+        User user = userService.getUserByLoginIdOrThrow(loginId);
+
+        List<MedicationSchedule> schedules = scheduleRepository.findByUserAndDate(user.getId(), date);
+
+        return schedules.stream()
+            .map(MedicationScheduleResponse::from)
+            .toList();
+    }
+
+    public List<MedicationScheduleResponse> getSchedulesByDateRange(String loginId, LocalDate startDate, LocalDate endDate) {
         User user = userService.getUserByLoginIdOrThrow(loginId);
 
         List<MedicationSchedule> schedules = scheduleRepository.findByUserAndDateRange(user.getId(), startDate, endDate);
@@ -55,4 +66,13 @@ public class MedicationScheduleService {
             .map(MedicationScheduleResponse::from)
             .toList();
     }
+
+    public List<MedicationScheduleResponse> getNotTakenMedicationSchedules(String loginId, LocalDate date) {
+        User user = userService.getUserByLoginIdOrThrow(loginId);
+        List<MedicationSchedule> schedules = scheduleRepository.findNotTakenByUserAndDate(user.getId(), date);
+        return schedules.stream()
+            .map(MedicationScheduleResponse::from)
+            .toList();
+    }
+
 }
