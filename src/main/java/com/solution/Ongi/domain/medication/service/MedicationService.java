@@ -30,7 +30,11 @@ public class MedicationService {
 
         Medication medication=Medication.builder()
                 .medication_title(createMedicationRequest.getMedication_title())
-                .medication_time(LocalTime.parse(createMedicationRequest.getMedication_time(),timeFormatter))
+                .medication_time(
+                    createMedicationRequest.getTimeList().stream()
+                        .map(time -> LocalTime.parse(time, timeFormatter))
+                        .toList()
+                )
                 .user(user)
                 .build();
 
