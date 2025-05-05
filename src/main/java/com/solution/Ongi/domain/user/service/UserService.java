@@ -55,10 +55,9 @@ public class UserService {
             .seniorPhone(request.seniorPhone())
             .relation(request.relation())
             .alertMax(request.alertMax())
-            .maxMissedResponses(request.maxMissedResponses())
+            .ignoreCnt(request.ignoreCnt())
             .agreement(agreement)
             .build();
-
 
         user.encodePassword(passwordEncoder);
 

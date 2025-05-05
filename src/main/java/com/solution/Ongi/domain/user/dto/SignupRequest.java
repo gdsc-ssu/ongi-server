@@ -35,7 +35,7 @@ public record SignupRequest(
     AlertInterval alertMax,
     @NotNull
     @NotEmpty
-    Integer maxMissedResponses,
+    Integer ignoreCnt,
     @NotNull
     Boolean pushAgreement,
     @NotNull

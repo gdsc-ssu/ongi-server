@@ -4,6 +4,7 @@ import com.solution.Ongi.domain.user.User;
 import com.solution.Ongi.global.base.BaseTimeEntity;
 import com.solution.Ongi.domain.meal.enums.MealType;
 import jakarta.persistence.*;
+import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Meal extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "meal_id")
     private Long id;
 

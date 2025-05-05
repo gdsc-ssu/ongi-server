@@ -63,8 +63,6 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private AlertInterval alertMax;
 
-    private Integer maxMissedResponses;
-
     @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true ,fetch = FetchType.LAZY)
     @JoinColumn(name = "agreement_id")
     private Agreement agreement;

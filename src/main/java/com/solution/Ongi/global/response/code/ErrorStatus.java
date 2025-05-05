@@ -25,6 +25,10 @@ public enum ErrorStatus implements BaseCode {
     VERIFICATION_NOT_COMPLETED("SMS401", HttpStatus.BAD_REQUEST, "인증이 완료되지 않았습니다."),
     ALREADY_VERIFIED("SMS402", HttpStatus.BAD_REQUEST, "이미 완료된 인증입니다."),
 
+    // Medication
+    MEDICATION_NOT_FOUND("MEDICATION400", HttpStatus.BAD_REQUEST, "약 정보가 존재하지 않습니다."),
+
+
     // Medication Schedule
     MEDICATION_SCHEDULE_NOT_FOUND("MEDSCHEDULE400", HttpStatus.BAD_REQUEST, "해당 복약 스케줄이 존재하지 않습니다.")
     ;

@@ -41,4 +41,9 @@ public class Medication extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)//지연 로딩
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void update(String title, List<LocalTime> timeList) {
+        this.medication_title = title;
+        this.medication_time = timeList;
+    }
 }
